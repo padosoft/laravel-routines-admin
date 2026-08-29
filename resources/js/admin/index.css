@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+/*
+ * Token, e solo token. La regola che questo file esiste per rendere possibile: nessun componente
+ * scrive un colore letterale. Un `text-white` accanto a un `bg-primary` è corretto in un tema e
+ * illeggibile nell'altro, e il difetto non si vede finché qualcuno non apre il pannello di notte.
+ *
+ * Scuro è il default (`:root`), chiaro è la controparte di pari dignità (`.light` sull'<html>).
+ * Ogni sfondo su token ha la sua controparte di testo: `--color-on-accent` per i fill accento.
+ */
+@theme {
+  --color-canvas: #07090f;
+  --color-surface: #0b0e16;
+  --color-surface-muted: #11151f;
+  --color-border: rgba(120, 200, 220, 0.12);
+  --color-border-strong: rgba(120, 200, 220, 0.22);
+
+  --color-ink: #eaf6f4;
+  --color-ink-muted: #a3b4bb;
+  --color-ink-subtle: #65787f;
+
+  --color-accent: #2ff5d6;
+  --color-accent-hover: #5cf7e0;
+  --color-accent-subtle: rgba(47, 245, 214, 0.1);
+  --color-on-accent: #04130f;
+
+  --color-ok: #2ff5a8;
+  --color-ok-subtle: rgba(47, 245, 168, 0.1);
+  --color-warn: #ffcf5c;
+  --color-warn-subtle: rgba(255, 207, 92, 0.1);
+  --color-danger: #ff5c7a;
+  --color-danger-subtle: rgba(255, 92, 122, 0.1);
+
+  /* Viola: un fire fermo che aspetta un umano. È l'unico colore di richiamo del prodotto,
+     e non va usato per nient'altro — se richiama tutto, non richiama niente. */
+  --color-attention: #a394ff;
+  --color-attention-subtle: rgba(123, 108, 255, 0.13);
+
+  --color-idle: #65787f;
+  --color-idle-subtle: rgba(120, 200, 220, 0.06);
+
+  --color-scrim: rgba(4, 5, 10, 0.72);
+
+  --font-heading: "Space Grotesk", Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.28);
+
+  --radius-badge: 4px;
+  --radius-control: 6px;
+  --radius-card: 10px;
+  --radius-dialog: 12px;
+}
+
+/* Il tema chiaro ridefinisce SOLO i token; nessuna utility cambia nome. */
+.light {
+  --color-canvas: #f3f7f8;
+  --color-surface: #ffffff;
+  --color-surface-muted: #edf3f4;
+  --color-border: #dce6e8;
+  --color-border-strong: #c2d2d5;
+
+  --color-ink: #061014;
+  --color-ink-muted: #47595f;
+  --color-ink-subtle: #7a8d93;
+
+  --color-accent: #0bab95;
+  --color-accent-hover: #12d9bb;
+  --color-accent-subtle: #e4fbf6;
+  --color-on-accent: #04130f;
+
+  --color-ok: #0f8a5f;
+  --color-ok-subtle: #e9fbf2;
+  --color-warn: #8a5d00;
+  --color-warn-subtle: #fff6df;
+  --color-danger: #c2334f;
+  --color-danger-subtle: #fdecef;
+  --color-attention: #5a48e0;
+  --color-attention-subtle: #eeebff;
+  --color-idle: #7a8d93;
+  --color-idle-subtle: #eef3f4;
+
+  --color-scrim: rgba(6, 16, 20, 0.35);
+  --shadow-card: 0 1px 2px rgba(6, 16, 20, 0.05), 0 1px 3px rgba(6, 16, 20, 0.07);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2 {
+  font-family: var(--font-heading);
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Riga arrivata via polling: si accende e sfuma, così l'occhio la trova senza che nulla salti. */
+@keyframes arrive {
+  from {
+    background: var(--color-accent-subtle);
+  }
+  to {
+    background: transparent;
+  }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+.animate-rise-in {
+  animation: rise-in 0.15s ease-out;
+}
+.animate-arrive {
+  animation: arrive 0.6s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

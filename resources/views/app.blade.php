@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $appName }}</title>
     <script>
-        // Applica il tema prima del primo paint, cosi' non c'e' un lampo bianco in tema scuro.
+        // Il tema si applica PRIMA del primo paint: applicarlo in React significherebbe un
+        // lampo del tema sbagliato a ogni caricamento, e il pannello e' scuro di default.
+        // La classe e' `light`, non `dark`: scuro e' la base, chiaro la sovrascrive.
         (function () {
             try {
-                var t = localStorage.getItem('routines-admin-theme');
-                var dark = t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches);
-                if (dark) document.documentElement.classList.add('dark');
-            } catch (e) { /* storage bloccato: resta il tema chiaro */ }
+                var stored = localStorage.getItem('routines-admin-theme');
+                var light = stored
+                    ? stored === 'light'
+                    : window.matchMedia('(prefers-color-scheme: light)').matches;
+                if (light) document.documentElement.classList.add('light');
+            } catch (e) { /* storage bloccato: resta il tema scuro di default */ }
         })();
     </script>
     @php($manifest = \Padosoft\RoutinesAdmin\Support\ViteManifest::read())
@@ -27,6 +31,7 @@
          data-locale="{{ app()->getLocale() }}"
          data-timezone="{{ config('app.timezone') }}"
          data-logout-url="{{ $logoutUrl }}"
+         data-basename="{{ $basename ?? '' }}"
          data-can="{{ implode(',', \Padosoft\RoutinesAdmin\Support\Permissions::forCurrentUser()) }}"></div>
     @if($manifest['entry'])
         <script type="module" src="{{ asset('vendor/routines-admin/'.$manifest['entry']) }}"></script>

@@ -25,6 +25,73 @@ La creazione guidata mostra **l'anteprima delle prossime esecuzioni nel fuso del
 la sigla del fuso e l'annotazione sui cambi di ora legale: e' il modo piu' veloce per accorgersi che
 un orario e' sbagliato di un fuso, prima che la routine giri cosi' per un mese.
 
+## Le decisioni di interfaccia che contano
+
+Un pannello per automazioni non si giudica su quanto e' bello a schermo pieno, ma su cosa succede
+nei casi in cui qualcosa e' andato storto e nessuno stava guardando. Queste sono le scelte fatte
+per quei casi, e ognuna ha un test che la tiene ferma.
+
+**La fascia «in attesa» a zero non esiste.** Non viene sostituita da un riquadro verde «tutto ok»:
+un riquadro che compare sempre smette di essere letto nel giro di una settimana, e il giorno che
+segna 3 nessuno lo guarda piu'. Stessa regola per il badge nella navigazione.
+
+**«In pausa» e «in attesa» sono parole diverse.** Una routine `paused` e' una scelta di chi la
+possiede; un fire `paused` e' una domanda rivolta a una persona. Colore diverso, etichetta diversa,
+mai fuse — e il viola e' riservato al secondo, che e' l'unica cosa in tutto il pannello che merita
+un colore di richiamo.
+
+**Il segmento viola del grafico non scende mai sotto 3px.** Due fire in attesa dentro una giornata
+da quattrocento sparirebbero nell'arrotondamento, e sono esattamente i due che qualcuno deve vedere.
+Il grafico perde un po' di proporzione e guadagna l'unica cosa per cui lo si guarda.
+
+**Il testo leggibile lo compone il server.** `schedule_human`, `suspension_reason_label`,
+`tick_diagnosis` e il messaggio di un fire in pausa non passano dal layer i18n: sono **evidenza**.
+Un pannello che traducesse `target_not_registered` per conto proprio lo tradurrebbe diversamente
+dal comando CLI e dall'audit, e tre persone che guardano lo stesso evento leggerebbero tre cose
+diverse.
+
+**La conferma ridice cosa succedera', non chiede «sei sicuro?».** Il secondo passo di
+un'approvazione ripete i parametri esatti in una griglia mono. «Sei sicuro?» non aggiunge
+informazione: si impara a cliccarci sopra in due giorni, e da li' in poi non conferma piu' niente.
+
+**Un rifiuto senza motivo non parte, e terminare richiede di digitare il nome.** Il motivo finisce
+nel ledger e qualcuno lo leggera' — tipicamente chi si chiede perche' quella cosa non e' stata
+fatta. Terminare e' definitivo: la differenza fra «ho letto» e «ho cliccato» li' vale una routine.
+
+**La chiave di idempotenza nasce alla conferma**, non all'apertura del dialogo: aprire, chiudere e
+riaprire non deve produrre una chiave che il server ha gia' visto e che farebbe rifiutare come
+duplicato un fire nuovo.
+
+**Ottimismo solo su pausa/ripresa.** Approvare, rifiutare ed eseguire hanno effetti nel mondo
+reale: mostrarli come riusciti prima che lo siano vorrebbe dire raccontare una cosa non ancora vera.
+
+**Chi non ha il permesso vede la pagina**, con i comandi spenti e una fascia che dice cosa gli
+manca. Nasconderla lascerebbe la persona a chiedersi se esista.
+
+## Tema
+
+Scuro di default, chiaro di pari dignita'. La classe `light` sull'`<html>` e' applicata dal Blade
+**prima del primo paint** — applicarla in React vorrebbe dire un lampo del tema sbagliato a ogni
+caricamento. Nessun componente scrive un colore letterale: solo token, definiti in `@theme`, e ogni
+sfondo su token ha la sua controparte di testo.
+
+## Sviluppo
+
+```bash
+npm install
+npm run dev          # Vite in watch
+npm run typecheck    # TypeScript strict
+npm test             # vitest
+npm run build        # in public/, e' cio' che il pacchetto spedisce
+
+composer test        # pest
+vendor/bin/pint --test
+vendor/bin/phpstan analyse
+```
+
+Gli asset compilati sono **committati**: chi installa il pacchetto fa `vendor:publish` e ha il
+pannello, senza dover avere Node.
+
 ## Licenza
 
 MIT © [Padosoft](https://padosoft.com)
