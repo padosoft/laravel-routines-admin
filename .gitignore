@@ -1,6 +1,8 @@
 /vendor
 /node_modules
-/public/build
+# Gli asset compilati SONO cio che il pacchetto spedisce: `vendor:publish` li copia
+# nell'applicazione ospite, che cosi non ha bisogno di Node per avere il pannello.
+# public/ e quindi versionato di proposito.
 composer.lock
 composer-test.json
 composer-test.lock

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Padosoft\RoutinesAdmin;
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Padosoft\RoutinesAdmin\Support\Cfg;
 
 /**
  * Monta la SPA.
@@ -34,19 +36,26 @@ final class RoutinesAdminServiceProvider extends ServiceProvider
             __DIR__.'/../public' => public_path('vendor/routines-admin'),
         ], 'routines-admin-assets');
 
-        if (! config('routines-admin.enabled', true)) {
+        if (! Cfg::bool('routines-admin.enabled', true)) {
             return;
         }
 
-        Route::prefix((string) config('routines-admin.route.prefix', 'admin/routines'))
-            ->middleware((array) config('routines-admin.route.middleware', ['web', 'auth']))
+        Route::prefix(Cfg::string('routines-admin.route.prefix', 'admin/routines'))
+            ->middleware(Cfg::stringList('routines-admin.route.middleware', ['web', 'auth']))
             ->group(function (): void {
                 // Una sola rotta: il routing vero e' lato client. Il `where` cattura le sotto-rotte
                 // cosi' un refresh su /admin/routines/runs/xyz non da' 404.
-                Route::get('/{any?}', fn () => view('routines-admin::app', [
+                // `View::make` e non l'helper `view()`: la firma dell'helper vuole una
+                // `view-string`, che un analizzatore non puo' risolvere per una vista di
+                // pacchetto — e zittirlo con un cast direbbe una cosa che non e' stata verificata.
+                Route::get('/{any?}', fn () => View::make('routines-admin::app', [
                     'apiBase' => $this->apiBase(),
-                    'appName' => config('routines-admin.app_name', 'Routines'),
-                    'logoutUrl' => config('routines-admin.logout_url', '/logout'),
+                    'appName' => Cfg::string('routines-admin.app_name', 'Routines'),
+                    'logoutUrl' => Cfg::string('routines-admin.logout_url', '/logout'),
+                    // Il router client e' relativo al prefisso su cui l'host ha montato il
+                    // pannello: senza, un'installazione sotto /admin/routines vedrebbe ogni
+                    // link puntare alla radice del sito.
+                    'basename' => '/'.trim(Cfg::string('routines-admin.route.prefix', 'admin/routines'), '/'),
                 ]))->where('any', '.*')->name('routines-admin.index');
             });
     }
@@ -58,6 +67,6 @@ final class RoutinesAdminServiceProvider extends ServiceProvider
             return $configured;
         }
 
-        return '/'.trim((string) config('routines.api.prefix', 'api/routines/v1'), '/');
+        return '/'.trim(Cfg::string('routines.api.prefix', 'api/routines/v1'), '/');
     }
 }
