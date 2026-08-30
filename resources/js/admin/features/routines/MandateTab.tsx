@@ -41,7 +41,7 @@ export function MandateTab({ mandate, currency }: MandateTabProps) {
       )}
 
       <Card>
-        <dl className="m-0 grid grid-cols-[200px_1fr] gap-x-6 gap-y-3 text-[13px]">
+        <dl className="m-0 grid grid-cols-1 gap-x-6 gap-y-1 text-[13px] sm:grid-cols-[200px_1fr] sm:gap-y-3">
           <dt className="text-ink-subtle">{t.detail.actorChain}</dt>
           <dd className="m-0 font-mono text-xs">
             {mandate.actor_chain.map((actor) => actor.label ?? actor.subject).join(' → ')}

@@ -76,9 +76,14 @@ export function RoutineDetailScreen() {
         <h1 className="m-0 text-xl font-semibold tracking-[-0.02em]">{routine.name}</h1>
         <StatusDot status={routine.status} title={routine.suspension_reason_label} />
         <span className="text-xs text-ink-subtle">{routine.owner_label ?? routine.owner}</span>
+        {/*
+          I due comandi vanno a capo INSIEME. Lasciati sciolti nel wrap, «Esegui ora» finiva
+          da solo in fondo a una riga e «Sospendi» sulla successiva: due bottoni che agiscono
+          sulla stessa cosa non devono sembrare due sezioni.
+        */}
+        <div className="flex w-full flex-wrap gap-3 sm:ml-auto sm:w-auto">
         <Button
           variant="secondary"
-          className="ml-auto"
           disabled={!canFire || routine.status === 'ended'}
           title={canFire ? undefined : t.permission.needsFire}
           onClick={() => setRunNow(true)}
@@ -105,6 +110,7 @@ export function RoutineDetailScreen() {
         >
           {paused ? t.detail.resume : t.detail.pause}
         </Button>
+        </div>
       </div>
 
       {/*
@@ -112,7 +118,7 @@ export function RoutineDetailScreen() {
         prima cosa da sapere di questa pagina. E porta la frase del server, non lo slug.
       */}
       {routine.status === 'suspended' ? (
-        <div className="flex items-center gap-3.5 rounded-[10px] border border-border border-l-[3px] border-l-warn bg-warn-subtle px-[18px] py-3.5">
+        <div className="flex flex-col gap-3.5 rounded-[10px] border border-border border-l-[3px] border-l-warn bg-warn-subtle px-[18px] py-3.5 sm:flex-row sm:items-center">
           <AlertTriangle className="size-[17px] shrink-0 text-warn" strokeWidth={1.75} aria-hidden="true" />
           <div className="flex flex-col gap-0.5">
             <strong className="text-[13px]">{t.detail.suspendedTitle}</strong>
@@ -122,7 +128,7 @@ export function RoutineDetailScreen() {
           </div>
           <Button
             variant="danger"
-            className="ml-auto"
+            className="w-full sm:ml-auto sm:w-auto"
             disabled={!canWrite}
             onClick={() => setConfirmEnd(true)}
           >
@@ -141,7 +147,11 @@ export function RoutineDetailScreen() {
           })
         }
       >
-        <Tabs.List className="flex gap-0.5 border-b border-border">
+        {/*
+          I tab scorrono invece di stringersi: cinque etichette compresse in 375px diventano
+          cinque troncamenti, e un tab che non si riesce a leggere non si clicca.
+        */}
+        <Tabs.List className="-mx-4 flex gap-0.5 overflow-x-auto border-b border-border px-4 lg:mx-0 lg:px-0">
           {[
             ['overview', t.detail.tabOverview],
             ['runs', t.detail.tabRuns],
@@ -154,7 +164,7 @@ export function RoutineDetailScreen() {
             <Tabs.Trigger
               key={value}
               value={value}
-              className="h-9 cursor-pointer border-0 border-b-2 border-transparent bg-transparent px-3.5 text-[13px] font-medium text-ink-muted transition-colors duration-150 ease-out hover:text-ink data-[state=active]:border-b-accent data-[state=active]:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="h-9 shrink-0 cursor-pointer whitespace-nowrap border-0 border-b-2 border-transparent bg-transparent px-3.5 text-[13px] font-medium text-ink-muted transition-colors duration-150 ease-out hover:text-ink data-[state=active]:border-b-accent data-[state=active]:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               {label}
             </Tabs.Trigger>

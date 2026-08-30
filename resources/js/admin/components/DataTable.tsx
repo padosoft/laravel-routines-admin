@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useMediaQuery, WIDE_TABLE } from '../lib/hooks/useMediaQuery';
 
 export interface Column<T> {
   key: string;
@@ -6,6 +7,16 @@ export interface Column<T> {
   /** Larghezza della colonna nella grid template: `132px`, `minmax(220px,1fr)`, … */
   width: string;
   align?: 'left' | 'right';
+  /**
+   * Su schermo stretto questa colonna non si stringe: SPARISCE.
+   *
+   * Sette colonne su un telefono diventano o testo illeggibile o uno scorrimento
+   * orizzontale che nasconde metà della tabella dietro un gesto che nessuno fa. Il
+   * dettaglio della riga resta a un tocco di distanza, e lì c'è tutto.
+   */
+  hideOnNarrow?: boolean;
+  /** Larghezza da usare quando lo schermo è stretto; se manca vale `width`. */
+  narrowWidth?: string;
   render: (row: T) => ReactNode;
 }
 
@@ -39,7 +50,12 @@ export function DataTable<T>({
   empty,
   rowHeight = 'h-11',
 }: DataTableProps<T>) {
-  const template = columns.map((c) => c.width).join(' ');
+  const isWide = useMediaQuery(WIDE_TABLE);
+
+  const visible = isWide ? columns : columns.filter((c) => c.hideOnNarrow !== true);
+  const template = visible
+    .map((c) => (isWide ? c.width : (c.narrowWidth ?? c.width)))
+    .join(' ');
 
   return (
     <div className="overflow-hidden rounded-[10px] border border-border bg-surface shadow-card">
@@ -50,7 +66,7 @@ export function DataTable<T>({
             className="grid h-[38px] items-center gap-3 border-b border-border bg-surface-muted px-4"
             style={{ gridTemplateColumns: template }}
           >
-            {columns.map((column) => (
+            {visible.map((column) => (
               <th
                 key={column.key}
                 scope="col"
@@ -73,7 +89,7 @@ export function DataTable<T>({
               } ${rowClassName?.(row) ?? ''}`}
               style={{ gridTemplateColumns: template }}
             >
-              {columns.map((column) => (
+              {visible.map((column) => (
                 <td
                   key={column.key}
                   className={`min-w-0 ${column.align === 'right' ? 'text-right' : ''}`}

@@ -33,7 +33,7 @@ export function AttentionCard({
     <article className="flex animate-rise-in flex-col gap-3.5 rounded-[10px] border border-border border-l-[3px] border-l-attention bg-surface p-5 shadow-card">
       <header className="flex items-center gap-2.5">
         <Pause className="size-4 shrink-0 text-attention" strokeWidth={1.75} aria-hidden="true" />
-        <h2 className="m-0 font-sans text-[15px] font-semibold tracking-[-0.01em]">
+        <h2 className="m-0 min-w-0 truncate font-sans text-[15px] font-semibold tracking-[-0.01em]">
           {run.routine_name}
         </h2>
         <span className="ml-auto shrink-0 text-xs font-medium tabular-nums text-attention">
@@ -47,7 +47,7 @@ export function AttentionCard({
         <dt className="text-ink-subtle">{t.attention.actionClass}</dt>
         <dd className="m-0 font-mono">{run.action_class ?? '—'}</dd>
         <dt className="text-ink-subtle">{t.attention.fire}</dt>
-        <dd className="m-0 font-mono">{run.id}</dd>
+        <dd className="m-0 break-all font-mono">{run.id}</dd>
         <dt className="text-ink-subtle">{t.attention.owner}</dt>
         <dd className="m-0">{run.owner_label ?? '—'}</dd>
         <dt className="text-ink-subtle">{t.attention.at}</dt>

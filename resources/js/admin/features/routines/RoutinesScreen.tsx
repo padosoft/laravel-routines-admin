@@ -93,6 +93,7 @@ export function RoutinesScreen() {
         key: 'status',
         header: t.routines.colStatus,
         width: '132px',
+        narrowWidth: '92px',
         render: (row) => (
           // Per una routine sospesa il tooltip porta la frase del server, mai lo slug:
           // `target_not_registered` non dice a nessuno cosa fare.
@@ -116,6 +117,7 @@ export function RoutinesScreen() {
         key: 'target',
         header: t.routines.colTarget,
         width: '150px',
+        hideOnNarrow: true,
         render: (row) => (
           <span className="inline-flex w-fit items-center rounded-full border border-border px-2 py-[3px] text-xs text-ink-muted">
             {row.target_label}
@@ -126,6 +128,7 @@ export function RoutinesScreen() {
         key: 'schedule',
         header: t.routines.colSchedule,
         width: '230px',
+        hideOnNarrow: true,
         render: (row) => (
           <span className="flex min-w-0 flex-col gap-px">
             <span className="truncate text-[13px]">
@@ -141,16 +144,22 @@ export function RoutinesScreen() {
         key: 'next',
         header: t.routines.colNext,
         width: '165px',
+        // La prossima esecuzione resta anche sul telefono: è la ragione per cui si apre
+        // questo elenco. Sparisce l'orario assoluto, resta il «fra quanto».
+        narrowWidth: '108px',
         render: (row) => (
           <span className="flex flex-col gap-px">
             <span
-              className={`font-mono text-[11px] tabular-nums ${
+              className={`hidden font-mono text-[11px] tabular-nums md:inline ${
                 row.is_overdue ? 'text-warn' : 'text-ink-muted'
               }`}
             >
               {formatDateTime(row.next_run_at, { locale, timeZone: row.timezone })}
             </span>
-            <RelativeTime iso={row.next_run_at} className="text-xs text-ink-subtle" />
+            <RelativeTime
+              iso={row.next_run_at}
+              className={`text-xs ${row.is_overdue ? 'text-warn' : 'text-ink-subtle'}`}
+            />
           </span>
         ),
       },
@@ -158,6 +167,7 @@ export function RoutinesScreen() {
         key: 'last',
         header: t.routines.colLast,
         width: '150px',
+        hideOnNarrow: true,
         render: (row) => (
           <span className="flex flex-col items-start gap-0.5">
             {row.last_outcome === null ? (
@@ -173,6 +183,7 @@ export function RoutinesScreen() {
         key: 'actions',
         header: '',
         width: '44px',
+        narrowWidth: '32px',
         render: (row) => (
           <button
             type="button"
@@ -204,7 +215,7 @@ export function RoutinesScreen() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <h1 className="m-0 text-xl font-semibold tracking-[-0.02em]">{t.routines.title}</h1>
         <span className="text-xs tabular-nums text-ink-subtle">
           {t.routines.count(data?.meta.total ?? rows.length)}

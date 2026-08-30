@@ -18,12 +18,22 @@ const CRUMBS: Array<[RegExp, string]> = [
 
 export function Shell() {
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
   const crumb = CRUMBS.find(([pattern]) => pattern.test(location.pathname))?.[1] ?? t.app.title;
 
   const openPalette = useCallback(() => setPaletteOpen(true), []);
+  const openNav = useCallback(() => setNavOpen(true), []);
+  const closeNav = useCallback(() => setNavOpen(false), []);
+
+  // Il cassetto si chiude quando la rotta cambia — anche se il cambio non è arrivato da una
+  // voce di menu (una scorciatoia `g r`, il back del browser, la palette). Chiudere solo
+  // nell'`onClick` del link lascerebbe il pannello aperto sopra la pagina nuova.
+  useEffect(() => {
+    setNavOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -71,11 +81,26 @@ export function Shell() {
   }, [navigate]);
 
   return (
-    <div className="grid min-h-screen grid-cols-[240px_1fr] bg-canvas text-ink">
-      <Sidebar />
+    <div className="grid min-h-screen grid-cols-1 bg-canvas text-ink lg:grid-cols-[240px_1fr]">
+      <Sidebar open={navOpen} onNavigate={closeNav} />
+
+      {/*
+        La tendina esiste solo mentre il cassetto è aperto e solo sotto `lg`. È un `button` e
+        non un `div` con `onClick`: toccare fuori per chiudere è un'azione, e chi naviga da
+        tastiera deve poterla raggiungere invece di restare intrappolato dietro al pannello.
+      */}
+      {navOpen ? (
+        <button
+          type="button"
+          aria-label={t.nav.closeMenu}
+          onClick={closeNav}
+          className="fixed inset-0 z-30 cursor-pointer bg-ink/40 lg:hidden"
+        />
+      ) : null}
+
       <div className="flex min-w-0 flex-col">
-        <Topbar crumb={crumb} onOpenPalette={openPalette} />
-        <main className="w-full max-w-[1320px] flex-1 p-6">
+        <Topbar crumb={crumb} onOpenPalette={openPalette} onOpenNav={openNav} />
+        <main className="w-full max-w-[1320px] flex-1 p-4 lg:p-6">
           <Outlet />
         </main>
       </div>
