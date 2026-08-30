@@ -104,6 +104,10 @@ export function RoutinesScreen() {
         key: 'name',
         header: t.routines.colName,
         width: 'minmax(220px,1fr)',
+        // Su stretto il minimo di 220px NON si comprime e spinge fuori schermo le colonne
+        // successive: il bottone «esegui ora» finiva oltre il bordo destro. `minmax(0,1fr)`
+        // e' l'unica forma che davvero cede spazio.
+        narrowWidth: 'minmax(0,1fr)',
         render: (row) => (
           <span className="flex min-w-0 flex-col gap-px">
             <span className="truncate font-medium">{row.name}</span>
@@ -144,13 +148,13 @@ export function RoutinesScreen() {
         key: 'next',
         header: t.routines.colNext,
         width: '165px',
-        // La prossima esecuzione resta anche sul telefono: è la ragione per cui si apre
-        // questo elenco. Sparisce l'orario assoluto, resta il «fra quanto».
-        narrowWidth: '108px',
+        // Fuori dal telefono: con stato, nome e comando non ci sta, e il «quando gira»
+        // lo dice gia' la Panoramica, che e' la schermata da cui si entra.
+        hideOnNarrow: true,
         render: (row) => (
           <span className="flex flex-col gap-px">
             <span
-              className={`hidden font-mono text-[11px] tabular-nums md:inline ${
+              className={`font-mono text-[11px] tabular-nums ${
                 row.is_overdue ? 'text-warn' : 'text-ink-muted'
               }`}
             >

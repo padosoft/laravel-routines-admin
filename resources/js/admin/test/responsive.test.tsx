@@ -2,6 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { screen } from '@testing-library/react';
 import { renderWithProviders } from './harness';
 import { DataTable, type Column } from '../components/DataTable';
+import { RoutinesScreen } from '../features/routines/RoutinesScreen';
+import { RunsScreen } from '../features/runs/RunsScreen';
 import { Sidebar } from '../layout/Sidebar';
 
 /**
@@ -121,5 +123,83 @@ describe('la sidebar', () => {
     const { container } = renderWithProviders(<Sidebar open onNavigate={() => {}} />);
 
     expect(container.querySelector('aside')?.hasAttribute('inert')).toBe(false);
+  });
+});
+
+/**
+ * La larghezza minima incomprimibile di una griglia.
+ *
+ * `minmax(220px,1fr)` sembra flessibile e non lo e': il minimo NON cede, e le colonne che
+ * vengono dopo finiscono oltre il bordo destro — non tagliate, proprio irraggiungibili.
+ * E' successo davvero: la prima versione dell'adattamento mobile aveva il bottone «esegui
+ * ora» fuori schermo, e il difetto si e' visto solo fotografando il pannello, perche' nel
+ * DOM il bottone c'e' e ogni asserzione su di esso passa.
+ */
+function rigidWidth(template: string): number {
+  let total = 0;
+
+  // `minmax(220px,1fr)` → 220 (il minimo e' il pavimento). `minmax(0,1fr)` → 0.
+  for (const [, min] of template.matchAll(/minmax\(\s*(\d+)px/g)) {
+    total += Number(min);
+  }
+
+  // Le larghezze fisse fuori da un minmax: `132px`, `44px`, …
+  for (const [, px] of template.replace(/minmax\([^)]*\)/g, '').matchAll(/(\d+)px/g)) {
+    total += Number(px);
+  }
+
+  return total;
+}
+
+function templateOf(container: HTMLElement): string {
+  const header = container.querySelector('thead tr');
+  return (header as HTMLElement | null)?.style.gridTemplateColumns ?? '';
+}
+
+describe('la griglia delle tabelle su un telefono', () => {
+  // 390px e' un iPhone 15; tolti i 16px di padding della pagina, i 24px della tabella e i
+  // gap fra le colonne resta questo. Sopra questa soglia qualcosa esce dal bordo destro.
+  const BUDGET = 320;
+
+  beforeEach(() => {
+    setViewport(375);
+    // Una riga sola basta: la griglia e' definita dalle colonne, non dai dati. Serve pero'
+    // che la query risolva, altrimenti lo schermo mostra lo scheletro e la `<thead>` non c'e'.
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() =>
+        Promise.resolve({
+          ok: true,
+          status: 200,
+          json: () =>
+            Promise.resolve({
+              data: [],
+              meta: { total: 0, per_page: 25, next_cursor: null },
+            }),
+        }),
+      ),
+    );
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('l’elenco routine ci sta, comando compreso', async () => {
+    const { container } = renderWithProviders(<RoutinesScreen />);
+    await screen.findByRole('table');
+    const template = templateOf(container);
+
+    expect(template).not.toBe('');
+    expect(rigidWidth(template)).toBeLessThanOrEqual(BUDGET);
+  });
+
+  it('il ledger delle esecuzioni ci sta', async () => {
+    const { container } = renderWithProviders(<RunsScreen />);
+    await screen.findByRole('table');
+    const template = templateOf(container);
+
+    expect(template).not.toBe('');
+    expect(rigidWidth(template)).toBeLessThanOrEqual(BUDGET);
   });
 });

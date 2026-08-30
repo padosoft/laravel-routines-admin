@@ -47,9 +47,14 @@ export function RunTimeline({ points, locale }: RunTimelineProps) {
 
   return (
     <div className="rounded-[10px] border border-border bg-surface p-5 shadow-card">
-      <div className="mb-[18px] flex items-center">
+      {/*
+        Su schermo stretto la legenda va SOTTO il titolo. Sulla stessa riga i due si
+        contendevano lo spazio e perdevano entrambi: il titolo su tre righe e «In attesa»
+        spezzato a meta'.
+      */}
+      <div className="mb-[18px] flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-0">
         <h2 className="m-0 font-sans text-[13px] font-semibold">{t.overview.timeline}</h2>
-        <div className="ml-auto flex gap-3.5">
+        <div className="flex flex-wrap gap-3.5 sm:ml-auto sm:flex-nowrap">
           {SERIES.map((series) => {
             const off = hidden[series.key] === true;
             return (
@@ -60,7 +65,7 @@ export function RunTimeline({ points, locale }: RunTimelineProps) {
                 onClick={() =>
                   setHidden((current) => ({ ...current, [series.key]: !current[series.key] }))
                 }
-                className={`flex cursor-pointer items-center gap-1.5 border-0 bg-transparent p-0 text-xs text-ink-muted transition-opacity duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface ${
+                className={`flex cursor-pointer items-center gap-1.5 whitespace-nowrap border-0 bg-transparent p-0 text-xs text-ink-muted transition-opacity duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface ${
                   off ? 'opacity-40' : 'opacity-100'
                 }`}
               >

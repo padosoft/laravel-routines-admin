@@ -80,6 +80,8 @@ export function RunsScreen() {
         key: 'routine',
         header: t.runs.colRoutine,
         width: 'minmax(200px,1fr)',
+        // Vedi RoutinesScreen: un minimo in px non cede, e le colonne dopo escono di schermo.
+        narrowWidth: 'minmax(0,1fr)',
         render: (row) => <span className="truncate">{row.routine_name}</span>,
       },
       {

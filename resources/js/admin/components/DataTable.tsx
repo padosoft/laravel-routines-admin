@@ -63,7 +63,7 @@ export function DataTable<T>({
         <caption className="sr-only">{caption}</caption>
         <thead>
           <tr
-            className="grid h-[38px] items-center gap-3 border-b border-border bg-surface-muted px-4"
+            className="grid h-[38px] items-center gap-2 border-b border-border bg-surface-muted px-3 md:gap-3 md:px-4"
             style={{ gridTemplateColumns: template }}
           >
             {visible.map((column) => (
@@ -84,7 +84,7 @@ export function DataTable<T>({
             <tr
               key={rowKey(row)}
               onClick={onRowClick === undefined ? undefined : () => onRowClick(row)}
-              className={`grid items-center gap-3 border-b border-border px-4 last:border-b-0 ${rowHeight} ${
+              className={`grid items-center gap-2 border-b border-border px-3 last:border-b-0 md:gap-3 md:px-4 ${rowHeight} ${
                 onRowClick === undefined ? '' : 'cursor-pointer hover:bg-surface-muted'
               } ${rowClassName?.(row) ?? ''}`}
               style={{ gridTemplateColumns: template }}

@@ -23,9 +23,13 @@ export function AwaitingBanner({ count, oldestSince }: AwaitingBannerProps) {
   }
 
   return (
-    <div className="flex items-center gap-4 rounded-[10px] border border-border border-l-[3px] border-l-attention bg-attention-subtle px-5 py-4">
-      <Pause className="size-[18px] shrink-0 text-attention" strokeWidth={1.75} aria-hidden="true" />
-      <div className="flex flex-col gap-0.5">
+    <div className="flex flex-col gap-3 rounded-[10px] border border-border border-l-[3px] border-l-attention bg-attention-subtle px-5 py-4 sm:flex-row sm:items-center sm:gap-4">
+      <Pause
+        className="size-[18px] shrink-0 text-attention"
+        strokeWidth={1.75}
+        aria-hidden="true"
+      />
+      <div className="flex min-w-0 flex-col gap-0.5">
         <strong className="text-sm font-semibold">{t.overview.awaitingHeadline(count)}</strong>
         {oldestSince === null ? null : (
           <span className="text-xs text-ink-muted">
@@ -33,7 +37,15 @@ export function AwaitingBanner({ count, oldestSince }: AwaitingBannerProps) {
           </span>
         )}
       </div>
-      <Button variant="attention" className="ml-auto" onClick={() => navigate('/attention')}>
+      {/*
+        `shrink-0`: comprimere il comando che porta ALLA coda in attesa e' l'ultima cosa da
+        fare in questa fascia. Su telefono va a capo e prende tutta la riga.
+      */}
+      <Button
+        variant="attention"
+        className="w-full shrink-0 sm:ml-auto sm:w-auto"
+        onClick={() => navigate('/attention')}
+      >
         {t.overview.seeThem}
       </Button>
     </div>
