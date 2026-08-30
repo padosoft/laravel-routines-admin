@@ -131,12 +131,16 @@ export function OverviewScreen() {
                 >
                   <span className="size-[7px] shrink-0 rounded-full bg-accent" aria-hidden="true" />
                   <span className="truncate font-medium">{routine.name}</span>
-                  <span className="ml-auto shrink-0 font-mono text-[11px] tabular-nums text-ink-muted">
+                  {/*
+                    Su telefono l'orario assoluto cede il posto al «fra quanto»: sono la stessa
+                    informazione, e quella relativa è la sola che si legge di sfuggita.
+                  */}
+                  <span className="ml-auto hidden shrink-0 font-mono text-[11px] tabular-nums text-ink-muted sm:inline">
                     {formatDateTime(routine.next_run_at, { locale, timeZone: routine.timezone })}
                   </span>
                   <RelativeTime
                     iso={routine.next_run_at}
-                    className="w-[86px] shrink-0 text-right text-xs text-ink-subtle"
+                    className="ml-auto shrink-0 text-right text-xs text-ink-subtle sm:ml-0 sm:w-[86px]"
                   />
                 </li>
               ))}
@@ -161,11 +165,11 @@ export function OverviewScreen() {
                     <span className="truncate">{run.routine_name}</span>
                     <Duration
                       ms={run.duration_ms}
-                      className="ml-auto shrink-0 font-mono text-[11px] text-ink-muted"
+                      className="ml-auto hidden shrink-0 font-mono text-[11px] text-ink-muted sm:inline"
                     />
                     <RelativeTime
                       iso={run.started_at}
-                      className="w-[86px] shrink-0 text-right text-xs text-ink-subtle"
+                      className="ml-auto shrink-0 text-right text-xs text-ink-subtle sm:ml-0 sm:w-[86px]"
                     />
                   </button>
                 </li>

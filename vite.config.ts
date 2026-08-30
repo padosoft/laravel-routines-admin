@@ -19,5 +19,9 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['resources/js/admin/test/setup.ts'],
     globals: true,
+    // I test del pannello stanno tutti qui. Senza questo vincolo vitest raccoglie anche i
+    // `.spec.ts` che le dipendenze PHP si portano dietro in `vendor/` (phpstan ha un intero
+    // sito con test Playwright), e la suite fallisce per file che non sono nostri.
+    include: ['resources/js/**/*.{test,spec}.{ts,tsx}'],
   },
 });

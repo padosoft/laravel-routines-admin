@@ -73,6 +73,7 @@ export function RunsScreen() {
         key: 'outcome',
         header: t.runs.colOutcome,
         width: '120px',
+        narrowWidth: '104px',
         render: (row) => <OutcomeBadge outcome={row.outcome} withDot />,
       },
       {
@@ -85,6 +86,7 @@ export function RunsScreen() {
         key: 'reason',
         header: t.runs.colReason,
         width: '130px',
+        hideOnNarrow: true,
         render: (row) => (
           <span className="inline-flex w-fit items-center rounded-full border border-border px-2 py-[2px] text-[11px] text-ink-muted">
             {t.reason[row.reason]}
@@ -95,6 +97,7 @@ export function RunsScreen() {
         key: 'started',
         header: t.runs.colStarted,
         width: '175px',
+        hideOnNarrow: true,
         render: (row) => (
           <span className="font-mono text-[11px] tabular-nums text-ink-muted">
             {formatDateTime(row.started_at, { locale, timeZone: timezone })}
@@ -105,12 +108,14 @@ export function RunsScreen() {
         key: 'duration',
         header: t.runs.colDuration,
         width: '90px',
+        narrowWidth: '72px',
         render: (row) => <Duration ms={row.duration_ms} className="text-[13px]" />,
       },
       {
         key: 'attempt',
         header: t.runs.colAttempt,
         width: '80px',
+        hideOnNarrow: true,
         render: (row) => (
           <span className="text-[13px] tabular-nums text-ink-muted">
             {row.attempt}/{row.max_attempts}
@@ -122,6 +127,7 @@ export function RunsScreen() {
         header: t.runs.colCost,
         width: '90px',
         align: 'right',
+        hideOnNarrow: true,
         render: (row) => (
           <Money amount={row.cost} currency={row.currency} className="text-[13px]" />
         ),

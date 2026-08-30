@@ -29,6 +29,8 @@ export const it = {
     runs: 'Esecuzioni',
     health: 'Salute',
     awaitingCount: (n: number) => `${n} in attesa di una risposta`,
+    openMenu: 'Apri il menu',
+    closeMenu: 'Chiudi il menu',
   },
   permission: {
     denied:

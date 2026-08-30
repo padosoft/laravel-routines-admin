@@ -84,7 +84,7 @@ export function RunSlideOver({ runId, onClose }: RunSlideOverProps) {
               </div>
             ) : null}
 
-            <dl className="m-0 grid grid-cols-[150px_1fr] gap-x-4 gap-y-2.5 text-xs">
+            <dl className="m-0 grid grid-cols-1 gap-x-4 gap-y-1 text-xs sm:grid-cols-[150px_1fr] sm:gap-y-2.5">
               <dt className="text-ink-subtle">{t.runs.idempotencyKey}</dt>
               <dd className="m-0 flex items-center gap-2">
                 <span className="min-w-0 break-all font-mono">{run.idempotency_key}</span>

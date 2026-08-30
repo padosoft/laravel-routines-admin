@@ -26,7 +26,7 @@ export function FilterBar({ search, chips, active, onChipClick }: FilterBarProps
   return (
     <div className="flex flex-wrap items-center gap-2">
       {search === undefined ? null : (
-        <div className="flex h-8 min-w-[280px] items-center gap-2 rounded-[6px] border border-border bg-surface px-2.5 focus-within:border-border-strong">
+        <div className="flex h-8 w-full items-center gap-2 rounded-[6px] border border-border bg-surface px-2.5 focus-within:border-border-strong sm:w-auto sm:min-w-[280px]">
           <Search className="size-3.5 shrink-0 text-ink-subtle" strokeWidth={1.75} aria-hidden="true" />
           <input
             type="search"

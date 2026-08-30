@@ -123,22 +123,25 @@ export function HealthScreen() {
           {data.targets.map((target) => (
             <li
               key={target.type}
-              className="grid grid-cols-[180px_1fr_200px_120px] items-center gap-3 border-b border-border px-5 py-[11px] last:border-b-0"
+              className="grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-1 border-b border-border px-5 py-[11px] last:border-b-0 md:grid-cols-[180px_1fr_200px_120px]"
             >
               <span className="truncate font-mono text-xs">{target.type}</span>
-              <span className="truncate text-[13px] text-ink-muted">{target.label ?? '—'}</span>
+              {/* Su due colonne l'etichetta passa sotto al tipo, non accanto: è la sua glossa. */}
+              <span className="order-3 truncate text-[13px] text-ink-muted md:order-none">
+                {target.label ?? '—'}
+              </span>
               {/*
                 Un bersaglio usato ma NON registrato è la causa numero uno delle sospensioni:
                 si vede in `danger`, non in grigio come il resto della riga.
               */}
               <span
-                className={`text-xs font-medium ${
+                className={`text-right text-xs font-medium md:text-left ${
                   target.registered ? 'text-ok' : 'text-danger'
                 }`}
               >
                 {target.registered ? t.health.registered : t.health.notRegistered}
               </span>
-              <span className="text-right text-xs tabular-nums text-ink-subtle">
+              <span className="order-4 text-right text-xs tabular-nums text-ink-subtle md:order-none">
                 {t.health.routinesUsing(target.routines_count)}
               </span>
             </li>

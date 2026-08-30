@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { useMediaQuery, WIDE_TABLE } from '../lib/hooks/useMediaQuery';
 
 /**
  * Scheletri della FORMA del contenuto atteso, non un blocco unico.
@@ -40,15 +41,21 @@ export function SkeletonChart() {
 }
 
 export function SkeletonRows({ count = 6, columns = 4 }: { count?: number; columns?: number }) {
+  // Lo scheletro deve avere la forma di ciò che arriva: sullo schermo stretto la tabella
+  // mostra poche colonne, e sette barrette da cinquanta pixel prometterebbero una griglia
+  // che poi non compare. La promessa «quando arriva niente si sposta» vale anche qui.
+  const isWide = useMediaQuery(WIDE_TABLE);
+  const visible = isWide ? columns : Math.min(columns, 3);
+
   return (
     <div className="overflow-hidden rounded-[10px] border border-border bg-surface">
       {Array.from({ length: count }, (_, row) => (
         <div
           key={row}
           className="grid items-center gap-4 border-b border-border px-5 py-3 last:border-b-0"
-          style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
+          style={{ gridTemplateColumns: `repeat(${visible}, 1fr)` }}
         >
-          {Array.from({ length: columns }, (_, col) => (
+          {Array.from({ length: visible }, (_, col) => (
             <Bar key={col} className="h-[11px]" />
           ))}
         </div>

@@ -68,6 +68,22 @@ reale: mostrarli come riusciti prima che lo siano vorrebbe dire raccontare una c
 **Chi non ha il permesso vede la pagina**, con i comandi spenti e una fascia che dice cosa gli
 manca. Nasconderla lascerebbe la persona a chiedersi se esista.
 
+## Sul telefono
+
+Il pannello non e' un'app mobile e non finge di esserlo: e' un pannello desktop che **si adatta**,
+perche' le due domande che si fanno dal telefono sono «devo approvare qualcosa?» e «sta girando
+tutto?», e per quelle non serve un secondo prodotto.
+
+Sotto `lg` la navigazione diventa un cassetto che entra da sinistra, con un velo che lo chiude al
+tocco. Sotto `md` le tabelle **smontano** le colonne secondarie invece di comprimerle: sette colonne
+su 375px non sono una tabella stretta, sono sette troncamenti. Restano lo stato, il nome e il
+prossimo orario — il resto e' a un tocco di distanza, nel dettaglio, dove c'e' tutto.
+
+Due dettagli che sembrano estetici e non lo sono. Le colonne nascoste **non ci sono**, non sono
+`display:none`: una colonna nascosta col CSS resta nel DOM e uno screen reader la legge comunque,
+riga per riga, come rumore. E lo scheletro di caricamento cambia forma insieme alla tabella: sette
+barrette dove poi compaiono tre colonne promettono una griglia che non arriva.
+
 ## Tema
 
 Scuro di default, chiaro di pari dignita'. La classe `light` sull'`<html>` e' applicata dal Blade

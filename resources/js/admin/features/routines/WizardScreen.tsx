@@ -137,6 +137,11 @@ export function WizardScreen() {
       </Link>
       <h1 className="m-0 text-xl font-semibold tracking-[-0.02em]">{t.wizard.title}</h1>
 
+      {/*
+        Sotto `sm` restano i quattro numeri con la linea che li unisce: l'etichetta di ogni
+        passo («Bersaglio», «Pianificazione», …) non ci sta e troncata non aiuta nessuno.
+        Il titolo del passo corrente è comunque scritto sopra la scheda che si sta compilando.
+      */}
       <ol className="m-0 flex list-none items-center gap-2 p-0">
         {[t.wizard.step1, t.wizard.step2, t.wizard.step3, t.wizard.step4].map((label, index) => {
           const n = index + 1;
@@ -162,10 +167,11 @@ export function WizardScreen() {
                   {n}
                 </span>
                 <span
-                  className={`whitespace-nowrap text-xs font-medium ${active ? 'text-ink' : 'text-ink-subtle'}`}
+                  className={`hidden whitespace-nowrap text-xs font-medium sm:inline ${active ? 'text-ink' : 'text-ink-subtle'}`}
                 >
                   {label}
                 </span>
+                <span className="sr-only sm:hidden">{label}</span>
               </button>
               <span className="h-px flex-1 bg-border" aria-hidden="true" />
             </li>
