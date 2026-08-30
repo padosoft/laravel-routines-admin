@@ -11,6 +11,8 @@ php artisan vendor:publish --tag=routines-admin-config
 
 Il pannello vive su `/admin/routines` (configurabile) dietro il guard che decidi tu.
 
+![Panoramica](art/overview.png)
+
 ## Cosa contiene
 
 | Schermata | A cosa serve |
@@ -24,6 +26,30 @@ Il pannello vive su `/admin/routines` (configurabile) dietro il guard che decidi
 La creazione guidata mostra **l'anteprima delle prossime esecuzioni nel fuso del proprietario**, con
 la sigla del fuso e l'annotazione sui cambi di ora legale: e' il modo piu' veloce per accorgersi che
 un orario e' sbagliato di un fuso, prima che la routine giri cosi' per un mese.
+
+### In attesa di te
+
+La schermata firma. Una routine che si e' fermata per chiedere un permesso **non ha fallito**: sta
+facendo esattamente quello per cui e' stata scritta. Per questo non compare in nessun log di errore
+e non fa scattare nessun monitor — l'unico posto dove la si vede e' qui.
+
+![In attesa di te](art/attention.png)
+
+### Routine, dettaglio e creazione guidata
+
+| | |
+|---|---|
+| ![Elenco routine](art/routines.png) | ![Dettaglio routine](art/routine-detail.png) |
+| L'elenco: stato, prossima esecuzione, esito dell'ultima. | Il dettaglio, con il mandato e le prossime occorrenze. |
+| ![Creazione guidata](art/wizard.png) | ![Salute](art/health.png) |
+| Il wizard mostra **cinque date vere** prima che ci sia qualcosa da salvare. | Ultimo tick, routine in ritardo, bersagli registrati. |
+
+### Il ledger e il tema chiaro
+
+| | |
+|---|---|
+| ![Esecuzioni](art/runs.png) | ![Tema chiaro](art/overview-light.png) |
+| Ogni fire: esito, motivo, durata, costo, chiave di idempotenza. | Chiaro e scuro sono di pari dignita', non uno il ripiego dell'altro. |
 
 ## Le decisioni di interfaccia che contano
 
@@ -77,12 +103,25 @@ tutto?», e per quelle non serve un secondo prodotto.
 Sotto `lg` la navigazione diventa un cassetto che entra da sinistra, con un velo che lo chiude al
 tocco. Sotto `md` le tabelle **smontano** le colonne secondarie invece di comprimerle: sette colonne
 su 375px non sono una tabella stretta, sono sette troncamenti. Restano lo stato, il nome e il
-prossimo orario — il resto e' a un tocco di distanza, nel dettaglio, dove c'e' tutto.
+comando — il resto e' a un tocco di distanza, nel dettaglio, dove c'e' tutto, e il «quando gira»
+lo dice gia' la Panoramica, che e' la schermata da cui si entra.
 
 Due dettagli che sembrano estetici e non lo sono. Le colonne nascoste **non ci sono**, non sono
 `display:none`: una colonna nascosta col CSS resta nel DOM e uno screen reader la legge comunque,
 riga per riga, come rumore. E lo scheletro di caricamento cambia forma insieme alla tabella: sette
 barrette dove poi compaiono tre colonne promettono una griglia che non arriva.
+
+| | | | |
+|---|---|---|---|
+| ![In attesa, su telefono](art/mobile-attention.png) | ![Panoramica su telefono](art/mobile-overview.png) | ![Elenco su telefono](art/mobile-routines.png) | ![Navigazione a cassetto](art/mobile-nav.png) |
+| «Devo approvare qualcosa?» | «Sta girando tutto?» | Stato, nome, comando. | La navigazione a cassetto. |
+
+Le foto qui sopra non sono un mockup: escono dal pannello compilato, quello che il pacchetto
+spedisce. E sono servite. La prima versione dell'adattamento sembrava a posto in ogni test — il
+bottone «esegui ora» esisteva nel DOM, era cliccabile, ogni asserzione su di esso passava — ma
+fotografata era **fuori dal bordo destro**: `minmax(220px,1fr)` ha un minimo che non cede, e
+spingeva fuori tutto quello che veniva dopo. Da li' e' nato il test che misura la larghezza
+incomprimibile della griglia contro un telefono.
 
 ## Tema
 
